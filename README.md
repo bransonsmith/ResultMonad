@@ -1,6 +1,7 @@
 # ResultNomad
 
-A simple, extensible, and type-safe Result monad for C#/.NET, supporting functional error handling, monadic chaining, and pattern matching.
+A lightweight, simple, extensible, and type-safe Result monad for C#/.NET, supporting functional error handling, monadic chaining, and pattern matching.
+Use this small package, that you can easily understand yourself, to help enable Functional practices in your C# project.
 
 ## Features
 
@@ -26,7 +27,11 @@ dotnet add package ResultNomad
 You can define custom error codes in your application for domain-specific errors:
 
 ```cs
-public static class MyErrorCodes { public static readonly ResultErrorCode EmployeeAlreadyExists = new("EmployeeAlreadyExists"); public static readonly ResultErrorCode InvalidEmployeeData = new("InvalidEmployeeData"); }
+public static class MyErrorCodes
+{
+  public static readonly ResultErrorCode EmployeeAlreadyExists = new("EmployeeAlreadyExists");
+  public static readonly ResultErrorCode InvalidEmployeeData = new("InvalidEmployeeData");
+}
 ```
 
 ---
@@ -37,7 +42,10 @@ Chain together multiple operations, each returning a `Result<T>`. If any step fa
 
 ```cs
 var employee = new Employee { Name = "Alice", Email = "alice@example.com" };
-var result = ValidateEmployee(employee) .Then(emp => CheckEmployeeDoesNotExist(emp)) .Then(emp => SaveEmployee(emp)) .Then(emp => SendWelcomeEmail(emp));
+var result = ValidateEmployee(employee)
+  .Then(emp => CheckEmployeeDoesNotExist(emp))
+  .Then(emp => SaveEmployee(emp))
+  .Then(emp => SendWelcomeEmail(emp));
 ```
 
 ---
@@ -47,7 +55,13 @@ var result = ValidateEmployee(employee) .Then(emp => CheckEmployeeDoesNotExist(e
 Handle each outcome explicitly using pattern matching:
 
 ```cs
-switch (result) { case ResultSuccess<Employee> s: Console.WriteLine($"Employee onboarded: {s.Data.Name}"); break; case ResultFailure<Employee> f when f.ErrorCode == MyErrorCodes.EmployeeAlreadyExists: Console.WriteLine("Employee already exists."); break; case ResultFailure<Employee> f when f.ErrorCode == MyErrorCodes.InvalidEmployeeData: Console.WriteLine("Invalid employee data."); break; case ResultFailure<Employee> f: Console.WriteLine($"Other error: {f.ErrorCode.Code} - {f.Message}"); break; }
+switch (result)
+{
+  case ResultSuccess<Employee> s: Console.WriteLine($"Employee onboarded: {s.Data.Name}"); break;
+  case ResultFailure<Employee> f when f.ErrorCode == MyErrorCodes.EmployeeAlreadyExists: Console.WriteLine("Employee already exists."); break;
+  case ResultFailure<Employee> f when f.ErrorCode == MyErrorCodes.InvalidEmployeeData: Console.WriteLine("Invalid employee data."); break;
+  case ResultFailure<Employee> f: Console.WriteLine($"Other error: {f.ErrorCode.Code} - {f.Message}"); break;
+}
 ```
 
 
@@ -57,10 +71,24 @@ switch (result) { case ResultSuccess<Employee> s: Console.WriteLine($"Employee o
 
 
 ```cs
-public static class MyErrorCodes { public static readonly ResultErrorCode EmployeeAlreadyExists = new("EmployeeAlreadyExists"); public static readonly ResultErrorCode InvalidEmployeeData = new("InvalidEmployeeData"); }
-var employee = new Employee { Name = "Alice", Email = "alice@example.com" };
-var result = ValidateEmployee(employee) .Then(emp => CheckEmployeeDoesNotExist(emp)) .Then(emp => SaveEmployee(emp)) .Then(emp => SendWelcomeEmail(emp));
-switch (result) { case ResultSuccess<Employee> s: Console.WriteLine($"Employee onboarded: {s.Data.Name}"); break; case ResultFailure<Employee> f when f.ErrorCode == MyErrorCodes.EmployeeAlreadyExists: Console.WriteLine("Employee already exists."); break; case ResultFailure<Employee> f when f.ErrorCode == MyErrorCodes.InvalidEmployeeData: Console.WriteLine("Invalid employee data."); break; case ResultFailure<Employee> f: Console.WriteLine($"Other error: {f.ErrorCode.Code} - {f.Message}"); break; }
+public static class MyErrorCodes
+{
+  public static readonly ResultErrorCode EmployeeAlreadyExists = new("EmployeeAlreadyExists");
+  public static readonly ResultErrorCode InvalidEmployeeData = new("InvalidEmployeeData"); }
+
+  var employee = new Employee { Name = "Alice", Email = "alice@example.com" };
+
+  var result = ValidateEmployee(employee)
+                .Then(emp => CheckEmployeeDoesNotExist(emp))
+                .Then(emp => SaveEmployee(emp))
+                .Then(emp => SendWelcomeEmail(emp));
+  switch (result)
+  {
+    case ResultSuccess<Employee> s: Console.WriteLine($"Employee onboarded: {s.Data.Name}"); break;
+    case ResultFailure<Employee> f when f.ErrorCode == MyErrorCodes.EmployeeAlreadyExists: Console.WriteLine("Employee already exists."); break;
+    case ResultFailure<Employee> f when f.ErrorCode == MyErrorCodes.InvalidEmployeeData: Console.WriteLine("Invalid employee data."); break;
+    case ResultFailure<Employee> f: Console.WriteLine($"Other error: {f.ErrorCode.Code} - {f.Message}"); break;
+  }
 ```
 
 ---
