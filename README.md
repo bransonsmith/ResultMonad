@@ -1,21 +1,21 @@
 # ResultNomad
 
-A simple, extensible, and type-safe Result monad for C#/.NET, supporting functional error handling, monadic chaining, and robust pattern matching.
+A simple, extensible, and type-safe Result monad for C#/.NET, supporting functional error handling, monadic chaining, and pattern matching.
 
 ## Features
 
 - **Type-safe success and failure results**
 - **Extensible error codes** (define your own)
 - **Monadic chaining** with `.Then(...)`
-- **Pattern matching** for clear, maintainable error handling
+- **Pattern matching** made easy
 
 ---
+
+## Installation
 
 ```
 dotnet add package ResultNomad
 ```
-
-## Installation
 
 ---
 
