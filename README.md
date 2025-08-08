@@ -1,7 +1,6 @@
 # SimpleResultMonad
 
-A lightweight, simple, extensible, and type-safe Result monad for C#/.NET, supporting functional error handling, monadic chaining, and pattern matching.
-Use this small package, that you can easily understand yourself, to help enable Functional practices in your C# project.
+A simple, extensible, and type-safe Result monad for C#/.NET, supporting functional error handling, monadic chaining, and pattern matching.
 
 ## Features
 
