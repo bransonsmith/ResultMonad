@@ -8,15 +8,20 @@
 
 
   <PropertyGroup>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <TargetFramework>net8.0</TargetFramework>
-    <PackageId>ResultNomad</PackageId>
-    <Version>1.0.0</Version>
+    <PackageId>SimpleResultMonad</PackageId>
+    <Version>1.1.0</Version>
     <Authors>Branson Smith</Authors>
-    <Description>A simple, extensible, and type-safe Result monad for C#/.NET.</Description>
+    <Description>A lightweight, simple, extensible, and type-safe Result monad for C#/.NET, supporting functional error handling, monadic chaining, and pattern matching. Use this small package, that you can easily understand yourself, to help enable Functional practices in your C# project.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <RepositoryUrl>https://github.com/your/repo</RepositoryUrl>
+    <RepositoryUrl>https://github.com/bransonsmith/ResultMonad</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageTags>result;monad;functional;error-handling;csharp;dotnet;chaining;pattern-matching;result-type;simple;lightweight</PackageTags>
   </PropertyGroup>
   
+  <ItemGroup>
+    <None Include="..\README.md" Pack="true" PackagePath="\"/>
+  </ItemGroup>
   
 </Project>

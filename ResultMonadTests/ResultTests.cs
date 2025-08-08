@@ -246,6 +246,78 @@ public class ResultTests
             => new ResultSuccess<User>(user, "email sent");
     }
 
+    [Fact]
+    public async Task ThenAsync_SingleAsyncFunc_Works()
+    {
+        var initial = new ResultSuccess<int>(5, "ok");
+        var result = await initial.ToAsync()
+            .Then<int, string>(async i =>
+            {
+                await Task.Delay(10);
+                return new ResultSuccess<string>($"AsyncValue: {i}", "async done");
+            });
+
+        var success = Assert.IsType<ResultSuccess<string>>(result);
+        Assert.Equal("AsyncValue: 5", success.Data);
+        Assert.Equal("async done", success.Message);
+    }
+
+    [Fact]
+    public async Task ThenAsync_ChainTwoAsyncFuncs_Works()
+    {
+        var initial = new ResultSuccess<int>(7, "ok");
+        var result = await initial.ToAsync()
+            .Then<int, string>(async i =>
+            {
+                await Task.Delay(10);
+                return new ResultSuccess<string>($"First: {i}", "first async");
+            })
+            .Then<string, string>(async s =>
+            {
+                await Task.Delay(10);
+                return new ResultSuccess<string>($"{s} - Second", "second async");
+            });
+
+        var success = Assert.IsType<ResultSuccess<string>>(result);
+        Assert.Equal("First: 7 - Second", success.Data);
+        Assert.Equal("second async", success.Message);
+    }
+
+    [Fact]
+    public async Task Then_ThenAsync_Then_ThenAsync_Chains_Correctly()
+    {
+
+        var result = await ValidateInput("bob", "password123").ToAsync()
+            .Then(async user => await CheckUserDoesNotExist(user))
+            .Then(user => HashPassword(user))
+            .Then(user => SaveUser(user))
+            .Then(user => SendWelcomeEmail(user))
+            .Then(user => new ResultSuccess<string>($"User {user.Username} registered successfully!", "done"));
+
+        var success = Assert.IsType<ResultSuccess<string>>(result);
+        Assert.Equal("Value: 3!", success.Data);
+        Assert.Equal("async4", success.Message);
+
+        static Result<User> ValidateInput(string username, string password)
+    => string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password)
+        ? new ResultFailure<User>("Invalid input", ResultErrorCode.ValidationFailed)
+        : new ResultSuccess<User>(new User { Username = username, Password = password }, "input valid");
+
+        static async Task<Result<User>> CheckUserDoesNotExist(User user)
+            => user.Username == "bob"
+                ? new ResultFailure<User>("User already exists", ResultErrorCode.ValidationFailed)
+                : new ResultSuccess<User>(user, "user does not exist");
+
+        static Result<User> HashPassword(User user)
+            => new ResultSuccess<User>(user with { Password = "hashed:" + user.Password }, "password hashed");
+
+        static Result<User> SaveUser(User user)
+            => new ResultSuccess<User>(user, "user saved");
+
+        static Result<User> SendWelcomeEmail(User user)
+            => new ResultSuccess<User>(user, "email sent");
+    }
+
     private record User
     {
         public string Username { get; init; }
